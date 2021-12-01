@@ -16,9 +16,13 @@ public class OneShotReunir extends  OneShotBehaviour {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<HomeMadeStruct> aux;
-	HomeMadeStruct posIni, aux2;
+	HomeMadeStruct[] indices = indices();
+	HomeMadeStruct posIni, aux2=new HomeMadeStruct();
 	char[][] hive;
 	ACLMessage msg;
+	int NUM = 8; 
+	int i = 0;
+	ArrayList <ACLMessage> lista_msg= new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	OneShotDibujarColmena printer = new OneShotDibujarColmena();
 	public OneShotReunir(ArrayList<HomeMadeStruct> indices, HomeMadeStruct posIni, char [][] colmena) {
@@ -30,46 +34,42 @@ public class OneShotReunir extends  OneShotBehaviour {
 
 	public void action()
 	{
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		Utils.enviarMensaje_todos(myAgent, "Reunir obrera", posIni);
-		while(!aux.isEmpty())
+		while(lista_msg.size()<NUM)
 		{
-			System.out.println("Estoy esperando la respuesta");
 			msg = receiveMessage();
-			try {
-				aux2 = (HomeMadeStruct) msg.getContentObject();
-				for(int i = 0; i <aux.size(); i++ )
-				{
-					if(aux.get(i).getIndex_x()==aux2.getIndex_x() && aux.get(i).getIndex_y() == aux2.getIndex_y())
-					{
-						aux.remove(i);
-						System.out.printf("He recibido la posición(%d,%d)\n", aux2.getIndex_x(), aux2.getIndex_y());
-						Utils.enviarMensaje_unico(myAgent,"Completado", msg);
-						hive[aux2.getIndex_x()][aux2.getIndex_y()] = 'O';
-						printer.dibujarColmena(hive);
-					}
-					else
-					{
-						
-					}
-				}
-				
-					
-			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			lista_msg.add(msg);
 		}
+		
+		for(ACLMessage m : lista_msg)
+		{
+			aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
+			aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
+			hive[aux2.getIndex_x()][aux2.getIndex_y()]='O';
+			Utils.enviarMensaje_unico(myAgent, aux2, m);
+			printer.dibujarColmena(hive);	
+			i++;
+		}		
 	}
+	
 	
 	public ACLMessage receiveMessage()
 	{
 		ACLMessage msg = this.myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
 		return msg;
 	};
+	
+	private HomeMadeStruct[] indices()
+	{
+		HomeMadeStruct[] aux = new HomeMadeStruct[8];
+		aux[0]= new HomeMadeStruct(-1,-1);
+		aux[1]= new HomeMadeStruct(-1,0);
+		aux[2]= new HomeMadeStruct(-1,1);
+		aux[3]= new HomeMadeStruct(0,-1);
+		aux[4]= new HomeMadeStruct(0,1);
+		aux[5]= new HomeMadeStruct(1,-1);
+		aux[6]= new HomeMadeStruct(1,0);
+		aux[7]= new HomeMadeStruct(1,1);
+		return aux;
+	}
 }

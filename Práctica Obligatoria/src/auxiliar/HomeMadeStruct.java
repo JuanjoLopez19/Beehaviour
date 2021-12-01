@@ -12,6 +12,7 @@ public class HomeMadeStruct implements Serializable{
 		index_x=i;
 		index_y=j;
 	}
+	public HomeMadeStruct() {}
 	public int getIndex_x() {
 		return index_x;
 	}
@@ -25,4 +26,7 @@ public class HomeMadeStruct implements Serializable{
 		this.index_y = index_y;
 	}
 	
+	public static void print(HomeMadeStruct m) {
+		System.out.println("Valor x: "+m.getIndex_x()+ " Valor y: "+m.getIndex_y());
+	}
 }
