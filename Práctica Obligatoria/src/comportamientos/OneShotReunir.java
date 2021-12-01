@@ -5,13 +5,16 @@ import java.util.Scanner;
 
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
-public class OneShotReunir extends  CyclicBehaviour {
+public class OneShotReunir extends  OneShotBehaviour {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ArrayList<HomeMadeStruct> aux;
 	HomeMadeStruct posIni, aux2;
 	char[][] hive;
@@ -40,15 +43,19 @@ public class OneShotReunir extends  CyclicBehaviour {
 			msg = receiveMessage();
 			try {
 				aux2 = (HomeMadeStruct) msg.getContentObject();
-				for(HomeMadeStruct m : aux)
+				for(int i = 0; i <aux.size(); i++ )
 				{
-					if(m.getIndex_x()==aux2.getIndex_x() && m.getIndex_y() == aux2.getIndex_y())
+					if(aux.get(i).getIndex_x()==aux2.getIndex_x() && aux.get(i).getIndex_y() == aux2.getIndex_y())
 					{
-						aux.remove(aux2);
+						aux.remove(i);
 						System.out.printf("He recibido la posición(%d,%d)\n", aux2.getIndex_x(), aux2.getIndex_y());
 						Utils.enviarMensaje_unico(myAgent,"Completado", msg);
 						hive[aux2.getIndex_x()][aux2.getIndex_y()] = 'O';
 						printer.dibujarColmena(hive);
+					}
+					else
+					{
+						
 					}
 				}
 				

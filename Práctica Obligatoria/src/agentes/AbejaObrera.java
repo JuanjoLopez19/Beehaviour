@@ -169,5 +169,4 @@ public class AbejaObrera extends Agent{
 			return aux;
 		}
 	}
-	}
 }

@@ -11,6 +11,11 @@ public class OneShotDibujarColmena extends OneShotBehaviour {
 		super();
 		hive=aux;
 	}
+	public OneShotDibujarColmena()
+	{
+		
+	}
+	
 	public void action()
 	{
 		dibujarColmena(hive);
