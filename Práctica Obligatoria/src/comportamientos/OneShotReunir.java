@@ -21,7 +21,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 	char[][] hive;
 	ACLMessage msg;
 	int NUM = 8; 
-	int i = 0;
+	int i = 0, j=0;
 	ArrayList <ACLMessage> lista_msg= new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	OneShotDibujarColmena printer = new OneShotDibujarColmena();
@@ -34,26 +34,58 @@ public class OneShotReunir extends  OneShotBehaviour {
 
 	public void action()
 	{
-		Utils.enviarMensaje_todos(myAgent, "Reunir obrera", posIni);
+		Utils.enviarMensaje_todos(myAgent, "Reunir obrera", new HomeMadeStruct(-1,-1));
 		while(lista_msg.size()<NUM)
 		{
 			msg = receiveMessage();
 			lista_msg.add(msg);
 		}
 		
+		aux = colocarPosObreraIni();
 		for(ACLMessage m : lista_msg)
 		{
+			Utils.enviarMensaje_unico(myAgent, aux.get(j), m);
+			j++;
+		}	
+		
+		printer.dibujarColmena(hive);
+
+		for(ACLMessage m : lista_msg)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
 			aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
 			hive[aux2.getIndex_x()][aux2.getIndex_y()]='O';
+			hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
 			Utils.enviarMensaje_unico(myAgent, aux2, m);
 			printer.dibujarColmena(hive);	
 			i++;
 		}		
 	}
 	
+	private  ArrayList<HomeMadeStruct> colocarPosObreraIni() {
+		ArrayList<HomeMadeStruct> aux = new ArrayList<>();
+		int x, y;
+		for(int i = 0; i<NUM;i++)
+		{
+			do{
+			    x = (int) Math.floor(Math.random() * 23 + 1);
+			    y = (int) Math.floor(Math.random() * 23 + 1);
+			}while(hive[x][y]!=' ');
+			HomeMadeStruct punto = new HomeMadeStruct(x,y);
+			hive[x][y]='O';
+			aux.add(punto);
+		}
+		return aux;
+		
+	}
 	
-	public ACLMessage receiveMessage()
+	private ACLMessage receiveMessage()
 	{
 		ACLMessage msg = this.myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
 		return msg;

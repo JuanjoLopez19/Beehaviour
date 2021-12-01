@@ -53,34 +53,11 @@ public class AbejaReina extends Agent {
 		calcIndices(indices,posIni);
 		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
 		OneShotReunir osr = new OneShotReunir(indices, posIni, colmena);
-		/*cyclicBehaviour = new CyclicBehaviour(this){
-			private static final long serialVersionUID = 1L;
-			public void action(){
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				int aux [] = new int[2];
-				aux[0] = getxInicial();
-				aux[1] = getyInicial();
-				Utils.enviarMensaje(myAgent, "Reunir", aux);
-				ACLMessage msg = receiveMessage();
-				try {
-					aux = (int[])msg.getContentObject();
-					colmena[aux[0]][aux[1]]='O';
-					dibujarColmena(colmena);
-				} catch (UnreadableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};*/
 		setServices();
+		
 		addBehaviour(osd);
 		addBehaviour(osr);
-		//addBehaviour(c);
+		
 		
 		
 	}
