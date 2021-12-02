@@ -1,66 +1,30 @@
-	package agentes;
+package agentes;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import auxiliar.HomeMadeStruct;
-import auxiliar.Utils;
+import comportamientos.CyclicComida;
 import comportamientos.OneShotDibujarColmena;
 import comportamientos.OneShotReunir;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
-import jade.core.Runtime;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.wrapper.*;
 
 public class AbejaReina extends Agent {
 	
 	private static final long serialVersionUID = 1L;
+	
 	protected CyclicBehaviour cyclicBehaviour;
 	private char[][] colmena = new char[25][25];
     char reina = 'R';
 	int xInicial, yInicial;
 	private ArrayList <HomeMadeStruct> indices = new ArrayList<HomeMadeStruct>();
+	private ArrayList <ACLMessage> lista_msg= new ArrayList<>();
 	private HomeMadeStruct posIni;
-	
-	public void setup(){
-		
-		for (int i = 0; i< colmena.length;i++){
-			for (int j = 0; j<colmena[0].length; j++){
-				colmena[i][j] = ' ';
-			}
-		}
-		xInicial = (int) Math.floor(Math.random() * 23 + 1);
-		yInicial = (int) Math.floor(Math.random() * 23 + 1);
-		posIni = new HomeMadeStruct(xInicial,yInicial);
-		
-		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
-		
-		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = reina;
-		calcIndices(indices,posIni);
-		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
-		OneShotReunir osr = new OneShotReunir(indices, posIni, colmena);
-		setServices();
-		
-		addBehaviour(osd);
-		addBehaviour(osr);
-		
-		
-		
-	}
 	
 	public int getxInicial() {
 		return xInicial;
@@ -84,6 +48,34 @@ public class AbejaReina extends Agent {
 
 	public void setColmena(char[][] colmena) {
 		this.colmena = colmena;
+	}
+	
+	public void setup(){
+		
+		for (int i = 0; i< colmena.length;i++){
+			for (int j = 0; j<colmena[0].length; j++){
+				colmena[i][j] = ' ';
+			}
+		}
+		xInicial = (int) Math.floor(Math.random() * 23 + 1);
+		yInicial = (int) Math.floor(Math.random() * 23 + 1);
+		posIni = new HomeMadeStruct(xInicial,yInicial);
+		
+		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
+		
+		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = reina;
+		calcIndices(indices,posIni);
+		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
+		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg);
+		CyclicComida cc = new CyclicComida(lista_msg);
+		setServices();
+		
+		addBehaviour(osd);
+		addBehaviour(osr);
+		addBehaviour(cc);
+		
+		
+		
 	}
 	
 	private void calcIndices(ArrayList<HomeMadeStruct> l, HomeMadeStruct m)

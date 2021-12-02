@@ -1,14 +1,11 @@
 package comportamientos;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 
 public class OneShotReunir extends  OneShotBehaviour {
 	/**
@@ -16,19 +13,26 @@ public class OneShotReunir extends  OneShotBehaviour {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<HomeMadeStruct> aux;
+	ArrayList <ACLMessage> lista_msg;
+	
 	HomeMadeStruct[] indices = Utils.indices();
-	HomeMadeStruct posIni, aux2=new HomeMadeStruct();
-	char[][] hive;
+	HomeMadeStruct posIni;
+	HomeMadeStruct aux2=new HomeMadeStruct();
+	
 	ACLMessage msg;
-	int NUM = 8; 
+	
+	int NUM = 15; 
 	int i = 0, j=0;
-	ArrayList <ACLMessage> lista_msg= new ArrayList<>();
-	Scanner sc = new Scanner(System.in);
+	char[][] hive;
+	char OBRERA='O';
+	
 	OneShotDibujarColmena printer = new OneShotDibujarColmena();
-	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena) {
+	
+	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena, ArrayList <ACLMessage> msgs) {
 		super();
 		this.posIni=posIni;
 		hive = colmena;
+		lista_msg=msgs;
 	}
 
 	public void action()
@@ -49,21 +53,25 @@ public class OneShotReunir extends  OneShotBehaviour {
 		
 		printer.dibujarColmena(hive);
 
-		for(ACLMessage m : lista_msg)
+		for(int x = 0; x<lista_msg.size(); x++, i++)
 		{
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(x<8)
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
+				aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
+				hive[aux2.getIndex_x()][aux2.getIndex_y()]=OBRERA;
+				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
+				Utils.enviarMensaje_unico(myAgent, aux2, lista_msg.get(x));
+				printer.dibujarColmena(hive);	
 			}
-			aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
-			aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
-			hive[aux2.getIndex_x()][aux2.getIndex_y()]='O';
-			hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
-			Utils.enviarMensaje_unico(myAgent, aux2, m);
-			printer.dibujarColmena(hive);	
-			i++;
+			else
+				Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));
 		}		
 	}
 	
@@ -77,7 +85,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 			    y = (int) Math.floor(Math.random() * 23 + 1);
 			}while(hive[x][y]!=' ');
 			HomeMadeStruct punto = new HomeMadeStruct(x,y);
-			hive[x][y]='O';
+			hive[x][y]=OBRERA;
 			aux.add(punto);
 		}
 		return aux;

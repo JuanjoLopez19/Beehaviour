@@ -73,6 +73,7 @@ public class AbejaObrera extends Agent{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+		
 		private HomeMadeStruct aux;
 		ACLMessage msg;
 		boolean flag = true;
