@@ -21,7 +21,8 @@ public class OneShotReunir extends  OneShotBehaviour {
 	
 	ACLMessage msg;
 	
-	int NUM = 15; 
+	int NUM = 8;
+	int NUM_DEF=5;
 	int i = 0, j=0;
 	char[][] hive;
 	char OBRERA='O';
@@ -55,7 +56,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 
 		for(int x = 0; x<lista_msg.size(); x++, i++)
 		{
-			if(x<8)
+			if(x<NUM_DEF)
 			{
 				try {
 					Thread.sleep(1000);
@@ -72,7 +73,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 			}
 			else
 				Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));
-		}		
+		}	
 	}
 	
 	private  ArrayList<HomeMadeStruct> colocarPosObreraIni() {

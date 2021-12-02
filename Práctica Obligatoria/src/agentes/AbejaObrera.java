@@ -1,8 +1,5 @@
 package agentes;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.content.lang.sl.SLCodec;
@@ -12,7 +9,6 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.Envelope;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
