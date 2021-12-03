@@ -1,5 +1,7 @@
 package agentes;
 
+import java.util.ArrayList;
+
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.content.lang.sl.SLCodec;
@@ -17,14 +19,17 @@ import jade.lang.acl.UnreadableException;
 public class AbejaObrera extends Agent{
 
 	private static final long serialVersionUID = 1L;
-	protected CyclicBehaviour cyclicBehaviour;
+	protected CyclicComerObrera cco;
 	protected OneShotPosicion osp;
-	HomeMadeStruct pos, pos_ran;
+	ArrayList<HomeMadeStruct> pos = new ArrayList<>();
 	public void setup(){
 				
 		osp = new OneShotPosicion();
+		cco = new CyclicComerObrera(pos);
 		setServices();
-		addBehaviour(osp);	
+		addBehaviour(osp);
+		addBehaviour(cco);
+		
 	}	
 	
 	private void setServices() 
@@ -42,7 +47,7 @@ public class AbejaObrera extends Agent{
         dfd.addServices(sd);
         sd = new ServiceDescription();
         sd.setName("Abeja Obrera: Comer");
-        sd.setType("Comer");
+        sd.setType("Comer obrera");
         sd.addOntologies("ontologia");
         sd.addLanguages(new SLCodec().getName());
         dfd.addServices(sd);
@@ -85,7 +90,7 @@ public class AbejaObrera extends Agent{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			System.out.println("Estoy esperando a un mensaje");
+			//System.out.println("Estoy esperando a un mensaje");
 			
 				ACLMessage msg = receiveMessage();
 				try {
@@ -96,18 +101,44 @@ public class AbejaObrera extends Agent{
 						
 						msg = receiveMessage();
 						aux = (HomeMadeStruct) msg.getContentObject();
-						pos_ran=aux;
+						pos.add(aux);
 						
 						msg = receiveMessage();
 						aux = (HomeMadeStruct) msg.getContentObject();
-						pos=aux;
+						pos.add(aux);
 						
-						System.out.print("Mi posicion es: ");
-						HomeMadeStruct.print(pos);
+						//System.out.print("Mi posicion es: ");
+						//HomeMadeStruct.print(pos);
 				} catch (UnreadableException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 			}
+		}
+	}
+	
+	public class CyclicComerObrera extends CyclicBehaviour{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		private ArrayList<HomeMadeStruct> pos;
+		private ArrayList<ACLMessage> RecolectorList;
+		public CyclicComerObrera(ArrayList<HomeMadeStruct> punto){
+			super();
+			pos=punto;
+		}
+		public void action() {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Longitud de posiciones es: "+pos.size());
+			block();
+				//HomeMadeStruct.print(pos);
+			
 		}
 	}
 }

@@ -3,6 +3,7 @@ package comportamientos;
 import java.util.ArrayList;
 
 import auxiliar.HomeMadeStruct;
+import auxiliar.Utils;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -15,15 +16,14 @@ public class CyclicComida extends CyclicBehaviour {
 	private ArrayList <ACLMessage> lista_recolectoras;
 	private ArrayList <ACLMessage> msg_list;
 	private HomeMadeStruct pos_Reina;
-	private Boolean flag;
+	private Boolean flag = true;
 	private int NUM = 15;
 	private int NUM_DEF=5;
+	private int rand_num;
 	private static final long serialVersionUID = 1L;
 	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina)
 	{
 		super();
-		lista_defensoras=DefenderList(msg);
-		lista_recolectoras=RecolectorList(msg);
 		this.msg_list=msg;
 		pos_Reina = posReina;
 		
@@ -45,7 +45,11 @@ public class CyclicComida extends CyclicBehaviour {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Pues ya he llegado");
+		
+		rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
+		Utils.enviarMensaje_unico(myAgent, lista_recolectoras, lista_defensoras.get(rand_num));
+		
+		//System.out.println("Pues ya he llegado");
 	}
 	
 	private ArrayList <ACLMessage> DefenderList(ArrayList <ACLMessage> lista)

@@ -52,14 +52,22 @@ public class OneShotReunir extends  OneShotBehaviour {
 			j++;
 		}	
 		
+		System.out.println("Abeja Reina: OBRERAS DISPERSADAS VENID");
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		printer.dibujarColmena(hive);
 
 		for(int x = 0; x<lista_msg.size(); x++, i++)
 		{
 			if(x<NUM_DEF)
 			{
+				System.out.println("Abeja Reina: OBRERAS COLOCANDOSE A MI ALREDEDOR");
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
