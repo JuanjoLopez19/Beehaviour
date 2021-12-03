@@ -67,7 +67,7 @@ public class AbejaReina extends Agent {
 		calcIndices(indices,posIni);
 		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
 		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg);
-		CyclicComida cc = new CyclicComida(lista_msg, posIni);
+		CyclicComida cc = new CyclicComida(lista_msg, posIni, colmena);
 		setServices();
 		
 		addBehaviour(osd);

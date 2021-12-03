@@ -6,6 +6,7 @@ import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 public class CyclicComida extends CyclicBehaviour {
 
@@ -15,18 +16,20 @@ public class CyclicComida extends CyclicBehaviour {
 	private ArrayList <ACLMessage> lista_defensoras;
 	private ArrayList <ACLMessage> lista_recolectoras;
 	private ArrayList <ACLMessage> msg_list;
+	private ACLMessage msg;
 	private HomeMadeStruct pos_Reina;
 	private Boolean flag = true;
 	private int NUM = 15;
 	private int NUM_DEF=5;
 	private int rand_num;
+	private char[][] hive;
 	private static final long serialVersionUID = 1L;
-	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina)
+	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina, char [][] colmena)
 	{
 		super();
 		this.msg_list=msg;
 		pos_Reina = posReina;
-		
+		hive = colmena;
 	}
 	
 
@@ -47,8 +50,8 @@ public class CyclicComida extends CyclicBehaviour {
 		}
 		
 		rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
-		Utils.enviarMensaje_unico(myAgent, lista_recolectoras, lista_defensoras.get(rand_num));
-		
+		Utils.enviarMensaje_unico(myAgent, hive, lista_defensoras.get(rand_num));
+		msg = receiveMessage();
 		//System.out.println("Pues ya he llegado");
 	}
 	
@@ -67,4 +70,10 @@ public class CyclicComida extends CyclicBehaviour {
 			aux.add(lista.get(i));
 		return aux;
 	}
+	
+	private ACLMessage receiveMessage()
+	{
+		ACLMessage msg = this.myAgent.blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
+		return msg;
+	};
 }

@@ -21,7 +21,7 @@ public class OneShotDibujarColmena extends OneShotBehaviour {
 		dibujarColmena(hive);
 	}
 	
-	public void dibujarColmena(char[][] colmena) {
+	public static void dibujarColmena(char[][] colmena) {
 		Utils.fakeClear();
 		System.out.println("\t_____________________________________________________________________________________________________");
 		System.out.print("\t");

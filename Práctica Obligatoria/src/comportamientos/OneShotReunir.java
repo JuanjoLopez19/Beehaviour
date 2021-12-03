@@ -27,7 +27,6 @@ public class OneShotReunir extends  OneShotBehaviour {
 	char[][] hive;
 	char OBRERA='O';
 	
-	OneShotDibujarColmena printer = new OneShotDibujarColmena();
 	
 	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena, ArrayList <ACLMessage> msgs) {
 		super();
@@ -59,7 +58,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		printer.dibujarColmena(hive);
+		OneShotDibujarColmena.dibujarColmena(hive);	
 
 		for(int x = 0; x<lista_msg.size(); x++, i++)
 		{
@@ -77,7 +76,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 				hive[aux2.getIndex_x()][aux2.getIndex_y()]=OBRERA;
 				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
 				Utils.enviarMensaje_unico(myAgent, aux2, lista_msg.get(x));
-				printer.dibujarColmena(hive);	
+				OneShotDibujarColmena.dibujarColmena(hive);	
 			}
 			else
 				Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));

@@ -19,9 +19,14 @@ import jade.lang.acl.UnreadableException;
 public class AbejaObrera extends Agent{
 
 	private static final long serialVersionUID = 1L;
-	protected CyclicComerObrera cco;
-	protected OneShotPosicion osp;
-	ArrayList<HomeMadeStruct> pos = new ArrayList<>();
+	
+	private CyclicComerObrera cco;
+	private OneShotPosicion osp;
+	private ArrayList<HomeMadeStruct> pos = new ArrayList<>();
+	
+	private char [][] hive;
+	
+	
 	public void setup(){
 				
 		osp = new OneShotPosicion();
@@ -121,12 +126,13 @@ public class AbejaObrera extends Agent{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+		ACLMessage msg;
 		private ArrayList<HomeMadeStruct> pos;
 		private ArrayList<ACLMessage> RecolectorList;
 		public CyclicComerObrera(ArrayList<HomeMadeStruct> punto){
 			super();
 			pos=punto;
+			RecolectorList = new ArrayList<>();
 		}
 		public void action() {
 			try {
@@ -135,9 +141,27 @@ public class AbejaObrera extends Agent{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Longitud de posiciones es: "+pos.size());
-			block();
-				//HomeMadeStruct.print(pos);
+			
+			// Recibir el mensaje de querer comida por parte de la reina
+			msg = receiveMessage();
+			try {
+				if(msg.getContentObject() == null)
+				{
+					Utils.enviarMensaje_unico(myAgent, pos, msg);
+				}
+				else
+				{
+					hive = (char[][]) msg.getContentObject();
+					System.out.println("Soy " + myAgent.getLocalName() + " y la reina me ha mandado que me mueva para comer");
+					Utils.enviarMensaje_todos(myAgent, "Comer obrera", null);
+					
+				}
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//HomeMadeStruct.print(pos);
 			
 		}
 	}
