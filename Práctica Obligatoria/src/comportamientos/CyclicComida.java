@@ -48,6 +48,7 @@ public class CyclicComida extends CyclicBehaviour {
 		System.out.println("Tengo hambre voy a mandar a alguna defensora que me consiga comida");
 		aux = new Auxiliar(hive, lista_recolectoras);
 		rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
+		System.out.println("Le he enviado el mensaje a " + lista_defensoras.get(rand_num).getSender().getLocalName());
 		Utils.enviarMensaje_unico(myAgent, aux, lista_defensoras.get(rand_num));
 		msg = receiveMessage();
 		try {
@@ -57,13 +58,14 @@ public class CyclicComida extends CyclicBehaviour {
 				//msg = receiveMessage();
 				
 			}
-			msg = receiveMessage();
+			
 			
 		} catch (UnreadableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.out.println("Estoy Esperando la respuesta de la obrera");
+		msg = receiveMessage();
 		block();
 		try {
 			Thread.sleep(10000);
