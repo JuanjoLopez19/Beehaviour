@@ -13,13 +13,14 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.StaleProxyException;
 
 public class AbejaReina extends Agent {
 	
 	private static final long serialVersionUID = 1L;
-	
+	private int DIM_MAX = 25;
 	protected CyclicBehaviour cyclicBehaviour;
-	private char[][] colmena = new char[25][25];
+	private char[][] colmena = new char[DIM_MAX][DIM_MAX];
     char reina = 'R';
 	int xInicial, yInicial;
 	private ArrayList <HomeMadeStruct> indices = new ArrayList<HomeMadeStruct>();
@@ -50,33 +51,45 @@ public class AbejaReina extends Agent {
 		this.colmena = colmena;
 	}
 	
-	public void setup(){
+	public void setup()
+	{
 		
-		for (int i = 0; i< colmena.length;i++){
-			for (int j = 0; j<colmena[0].length; j++){
+		for (int i = 0; i< colmena.length;i++)
+		{
+			for (int j = 0; j<colmena[0].length; j++)
+			{
 				colmena[i][j] = ' ';
 			}
 		}
-		xInicial = (int) Math.floor(Math.random() * 23 + 1);
-		yInicial = (int) Math.floor(Math.random() * 23 + 1);
+		
+		xInicial = (int) Math.floor(Math.random() * (DIM_MAX-2) + 1);
+		yInicial = (int) Math.floor(Math.random() * (DIM_MAX-2) + 1);
 		posIni = new HomeMadeStruct(xInicial,yInicial);
 		
 		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
 		
 		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = reina;
 		calcIndices(indices,posIni);
+		
 		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
 		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg);
 		CyclicComida cc = new CyclicComida(lista_msg, posIni, colmena);
+		
 		setServices();
 		
 		addBehaviour(osd);
 		addBehaviour(osr);
-		
-		addBehaviour(cc);
-		
-		
-		
+		addBehaviour(cc);	
+	}
+	
+	protected void takeDown() {
+		System.out.println("\t\t"+getLocalName()+": es hora de acabar con todo...");
+		try {
+			getContainerController().kill();
+		} catch (StaleProxyException e) {
+			System.err.println("No se ha podido eliminar el contenedor de la plataforma");
+			e.printStackTrace();
+		}
 	}
 	
 	private void calcIndices(ArrayList<HomeMadeStruct> l, HomeMadeStruct m)
@@ -124,7 +137,7 @@ public class AbejaReina extends Agent {
         dfd.addServices(sd);
         sd = new ServiceDescription();
         sd.setName("Abeja reina: Comer");
-        sd.setType("Comer Reina");
+        sd.setType("Comer");
         sd.addOntologies("ontologia");
         sd.addLanguages(new SLCodec().getName());
         dfd.addServices(sd);

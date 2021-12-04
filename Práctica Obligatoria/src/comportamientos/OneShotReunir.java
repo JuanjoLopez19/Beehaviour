@@ -21,8 +21,8 @@ public class OneShotReunir extends  OneShotBehaviour {
 	
 	ACLMessage msg;
 	
-	int NUM = 8;
-	int NUM_DEF=5;
+	int NUM = 15;
+	int NUM_DEF=8;
 	int i = 0, j=0;
 	char[][] hive;
 	char OBRERA='O';
@@ -52,7 +52,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 			j++;
 		}	
 		
-		System.out.println("Abeja Reina: OBRERAS DISPERSADAS VENID");
+		System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS DISPERSADAS VENID");
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -65,7 +65,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 		{
 			if(x<NUM_DEF)
 			{
-				System.out.println("Abeja Reina: OBRERAS COLOCANDOSE A MI ALREDEDOR");
+				System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS COLOCANDOSE A MI ALREDEDOR");
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
