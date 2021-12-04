@@ -2,11 +2,13 @@ package comportamientos;
 
 import java.util.ArrayList;
 
+import auxiliar.Auxiliar;
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 
 public class CyclicComida extends CyclicBehaviour {
 
@@ -17,12 +19,13 @@ public class CyclicComida extends CyclicBehaviour {
 	private ArrayList <ACLMessage> lista_recolectoras;
 	private ArrayList <ACLMessage> msg_list;
 	private ACLMessage msg;
-	private HomeMadeStruct pos_Reina;
+	private HomeMadeStruct pos_Reina, pos_aux;
 	private Boolean flag = true;
 	private int NUM = 15;
 	private int NUM_DEF=5;
 	private int rand_num;
 	private char[][] hive;
+	private Auxiliar aux;
 	private static final long serialVersionUID = 1L;
 	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina, char [][] colmena)
 	{
@@ -42,16 +45,33 @@ public class CyclicComida extends CyclicBehaviour {
 			lista_recolectoras=RecolectorList(msg_list);
 			flag=false;
 		}
+		System.out.println("Tengo hambre voy a mandar a alguna defensora que me consiga comida");
+		aux = new Auxiliar(hive, lista_recolectoras);
+		rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
+		Utils.enviarMensaje_unico(myAgent, aux, lista_defensoras.get(rand_num));
+		msg = receiveMessage();
 		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+			if(msg.getContentObject() == null)
+			{
+				System.out.println("La recolectora " + msg.getSender().getLocalName() + " me ha venido a alimentar");
+				//msg = receiveMessage();
+				
+			}
+			msg = receiveMessage();
+			
+		} catch (UnreadableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
-		Utils.enviarMensaje_unico(myAgent, hive, lista_defensoras.get(rand_num));
-		msg = receiveMessage();
+		block();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Recibe la colmena cambiada
 		//System.out.println("Pues ya he llegado");
 	}
 	

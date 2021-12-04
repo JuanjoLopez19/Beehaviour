@@ -2,8 +2,10 @@ package agentes;
 
 import java.util.ArrayList;
 
+import auxiliar.Auxiliar;
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
+import comportamientos.OneShotDibujarColmena;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -26,6 +28,8 @@ public class AbejaObrera extends Agent{
 	
 	private char [][] hive;
 	
+	private char OBRERA='O';
+	private char RECOLECTOR='C';
 	
 	public void setup(){
 				
@@ -126,13 +130,15 @@ public class AbejaObrera extends Agent{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		ACLMessage msg;
-		private ArrayList<HomeMadeStruct> pos;
+		private ACLMessage msg;
+		private Auxiliar aux;
+		private HomeMadeStruct pos_aux = new HomeMadeStruct();
+		private ArrayList<HomeMadeStruct> pos, auxiliar;
 		private ArrayList<ACLMessage> RecolectorList;
+		private int rand_num;
 		public CyclicComerObrera(ArrayList<HomeMadeStruct> punto){
 			super();
 			pos=punto;
-			RecolectorList = new ArrayList<>();
 		}
 		public void action() {
 			try {
@@ -147,13 +153,43 @@ public class AbejaObrera extends Agent{
 			try {
 				if(msg.getContentObject() == null)
 				{
+					Utils.enviarMensaje_unico(myAgent, pos.get(1), msg);
+				}
+				else if (msg.getContentObject().getClass() == pos_aux.getClass())
+				{
+					pos_aux = (HomeMadeStruct) msg.getContentObject();
+					System.out.println("Soy " + myAgent.getLocalName() + " y la obrera " + msg.getSender().getLocalName() + " me ha mandado su posición para alimentar a la reina" + HomeMadeStruct.print(pos_aux));
+					Utils.enviarMensaje_todos(myAgent, "Comer Reina", null);
+					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					Utils.enviarMensaje_unico(myAgent, pos, msg);
 				}
 				else
 				{
-					hive = (char[][]) msg.getContentObject();
+					aux = (Auxiliar) msg.getContentObject();
+					hive = aux.getColmena();
+					RecolectorList = aux.getLista_recolectoras();
+					OneShotDibujarColmena.dibujarColmena(hive);
 					System.out.println("Soy " + myAgent.getLocalName() + " y la reina me ha mandado que me mueva para comer");
-					Utils.enviarMensaje_todos(myAgent, "Comer obrera", null);
+					rand_num = (int) Math.floor(Math.random() * RecolectorList.size());
+					Utils.enviarMensaje_unico(myAgent, pos.get(1), RecolectorList.get(rand_num) );
+					msg = receiveMessage();
+					auxiliar = (ArrayList<HomeMadeStruct>) msg.getContentObject();
+					hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=' ';
+					OneShotDibujarColmena.dibujarColmena(hive);
+					
+					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+					hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=OBRERA;
+					hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=RECOLECTOR;
+					OneShotDibujarColmena.dibujarColmena(hive);
 					
 				}
 			} catch (UnreadableException e) {

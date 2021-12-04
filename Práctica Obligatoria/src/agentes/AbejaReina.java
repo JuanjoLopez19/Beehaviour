@@ -124,7 +124,7 @@ public class AbejaReina extends Agent {
         dfd.addServices(sd);
         sd = new ServiceDescription();
         sd.setName("Abeja reina: Comer");
-        sd.setType("Comer");
+        sd.setType("Comer Reina");
         sd.addOntologies("ontologia");
         sd.addLanguages(new SLCodec().getName());
         dfd.addServices(sd);

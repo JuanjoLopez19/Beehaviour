@@ -26,6 +26,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 	int i = 0, j=0;
 	char[][] hive;
 	char OBRERA='O';
+	char RECOLECTOR='C';
 	
 	
 	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena, ArrayList <ACLMessage> msgs) {
@@ -79,8 +80,12 @@ public class OneShotReunir extends  OneShotBehaviour {
 				OneShotDibujarColmena.dibujarColmena(hive);	
 			}
 			else
+			{
 				Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));
-		}	
+				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=RECOLECTOR;
+			}
+		}
+		OneShotDibujarColmena.dibujarColmena(hive);	
 	}
 	
 	private  ArrayList<HomeMadeStruct> colocarPosObreraIni() {

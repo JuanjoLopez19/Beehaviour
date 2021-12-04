@@ -30,7 +30,7 @@ public class HomeMadeStruct implements Serializable{
 		this.index_y = index_y;
 	}
 	
-	public static void print(HomeMadeStruct m) {
-		System.out.println("Valor x: "+m.getIndex_x()+ " Valor y: "+m.getIndex_y());
+	public static String print(HomeMadeStruct m) {
+		return String.format( "(" + m.getIndex_x() + "," + m.getIndex_y() +")");
 	}
 }
