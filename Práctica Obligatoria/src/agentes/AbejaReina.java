@@ -83,10 +83,13 @@ public class AbejaReina extends Agent {
 	}
 	
 	protected void takeDown() {
-		System.out.println("\t\t"+getLocalName()+": es hora de acabar con todo...");
-		try {
+		try 
+		{
+			System.out.println("\t\t"+getLocalName()+": es hora de acabar con todo...");
 			getContainerController().kill();
-		} catch (StaleProxyException e) {
+		} 
+		catch (StaleProxyException e) 
+		{
 			System.err.println("No se ha podido eliminar el contenedor de la plataforma");
 			e.printStackTrace();
 		}
@@ -124,25 +127,28 @@ public class AbejaReina extends Agent {
 	
 	private void setServices() 
     {
-        //Creates a new Agent descriptor and get its indicator (AID)
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        //Creates a new Service and set up its values
-        ServiceDescription sd = new ServiceDescription();
-        sd.setName("Abeja reina: Reunir");
-        sd.setType("Reunir");
-        sd.addOntologies("ontologia");
-        sd.addLanguages(new SLCodec().getName());
-        //add the service to the agent
-        dfd.addServices(sd);
-        sd = new ServiceDescription();
-        sd.setName("Abeja reina: Comer");
-        sd.setType("Comer");
-        sd.addOntologies("ontologia");
-        sd.addLanguages(new SLCodec().getName());
-        dfd.addServices(sd);
-        try
-        {
+		try
+	    {
+	        //Creates a new Agent descriptor and get its indicator (AID)
+	        DFAgentDescription dfd = new DFAgentDescription();
+	        dfd.setName(getAID());
+	        
+	        //Creates a new Service and set up its values
+	        ServiceDescription sd = new ServiceDescription();
+	        sd.setName("Abeja reina: Reunir");
+	        sd.setType("Reunir");
+	        sd.addOntologies("ontologia");
+	        sd.addLanguages(new SLCodec().getName());
+	        
+	        //add the service to the agent
+	        dfd.addServices(sd);
+	        sd = new ServiceDescription();
+	        sd.setName("Abeja reina: Comer");
+	        sd.setType("Comer");
+	        sd.addOntologies("ontologia");
+	        sd.addLanguages(new SLCodec().getName());
+	        dfd.addServices(sd);
+	        
             //Try catch to register the services
             DFService.register(this, dfd);
         }
