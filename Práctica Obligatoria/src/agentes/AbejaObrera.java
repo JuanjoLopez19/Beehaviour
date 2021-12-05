@@ -25,6 +25,7 @@ public class AbejaObrera extends Agent{
 	
 	private CyclicComerObrera cco;
 	private OneShotPosicion osp;
+	
 	private ArrayList<HomeMadeStruct> pos = new ArrayList<>();
 	
 	private char [][] hive;
@@ -43,10 +44,13 @@ public class AbejaObrera extends Agent{
 	}	
 	
 	protected void takeDown() {
-		System.out.println("\t\t"+getLocalName()+": la reina ha decidido morir, por lo que la colmena ha acabado...");
-		try {
-			getContainerController().kill();
-		} catch (StaleProxyException e) {
+		try 
+		{
+			System.out.println("\t\t"+getLocalName()+": la reina ha decidido morir, por lo que la colmena ha acabado...");
+			getContainerController().kill();	
+		} 
+		catch (StaleProxyException e) 
+		{
 			System.err.println("No se ha podido eliminar el contenedor de la plataforma");
 			e.printStackTrace();
 		}
@@ -54,39 +58,34 @@ public class AbejaObrera extends Agent{
 	
 	private void setServices() 
     {
-        //Creates a new Agent descriptor and get its indicator (AID)
-        DFAgentDescription dfd = new DFAgentDescription();
-        dfd.setName(getAID());
-        //Creates a new Service and set up its values
-        ServiceDescription sd = new ServiceDescription();
-        sd.setName("Abeja Obrera: Reunir");
-        sd.setType("Reunir obrera");
-        sd.addOntologies("ontologia");
-        sd.addLanguages(new SLCodec().getName());
-        //add the service to the agent
-        dfd.addServices(sd);
-        sd = new ServiceDescription();
-        sd.setName("Abeja Obrera: Comer");
-        sd.setType("Finalizar Obrera");
-        sd.addOntologies("ontologia");
-        sd.addLanguages(new SLCodec().getName());
-        dfd.addServices(sd);
-        try
-        {
-            //Try catch to register the services
-            DFService.register(this, dfd);
+		try
+		{
+	        //Creates a new Agent descriptor and get its indicator (AID)
+	        DFAgentDescription dfd = new DFAgentDescription();
+	        dfd.setName(getAID());
+	        //Creates a new Service and set up its values
+	        ServiceDescription sd = new ServiceDescription();
+	        sd.setName("Abeja Obrera: Reunir");
+	        sd.setType("Reunir obrera");
+	        sd.addOntologies("ontologia");
+	        sd.addLanguages(new SLCodec().getName());
+	        //add the service to the agent
+	        dfd.addServices(sd);
+	        sd = new ServiceDescription();
+	        sd.setName("Abeja Obrera: Comer");
+	        sd.setType("Finalizar Obrera");
+	        sd.addOntologies("ontologia");
+	        sd.addLanguages(new SLCodec().getName());
+	        dfd.addServices(sd);
+	        
+	            //Try catch to register the services
+	            DFService.register(this, dfd);
         }
         catch(FIPAException e)
         {
             System.err.println("Agente"+getLocalName()+": "+e.getMessage());
         }
     }
-	
-	public ACLMessage receiveMessage()
-	{
-		ACLMessage msg = blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
-		return msg;
-	};
 	
 	public class OneShotPosicion extends OneShotBehaviour
 	{
@@ -97,9 +96,8 @@ public class AbejaObrera extends Agent{
 		
 		private HomeMadeStruct aux;
 		ACLMessage msg;
-		boolean flag = true;
-		int index = 0;
-		public OneShotPosicion() {
+		public OneShotPosicion() 
+		{
 			super();
 		}
 		
@@ -131,14 +129,19 @@ public class AbejaObrera extends Agent{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
+		
 		private ACLMessage msg;
 		private Auxiliar aux;
 		private HomeMadeStruct pos_aux = new HomeMadeStruct();
+		
 		private ArrayList<HomeMadeStruct> pos, auxiliar;
 		private ArrayList<ACLMessage> RecolectorList;
+		
 		private int rand_num;
 		private String flag = "Variable para finalizar";
-		public CyclicComerObrera(ArrayList<HomeMadeStruct> punto){
+		
+		public CyclicComerObrera(ArrayList<HomeMadeStruct> punto)
+		{
 			super();
 			pos=punto;
 		}
@@ -172,6 +175,7 @@ public class AbejaObrera extends Agent{
 						aux = (Auxiliar) msg.getContentObject();
 						hive = aux.getColmena();
 						RecolectorList = aux.getLista_recolectoras();
+						
 						OneShotDibujarColmena.dibujarColmena(hive);
 						System.out.println("\t\t" + myAgent.getLocalName() + ": la reina me ha mandado avisar a una recolectora para que la alimente");
 						rand_num = (int) Math.floor(Math.random() * RecolectorList.size());
@@ -183,9 +187,7 @@ public class AbejaObrera extends Agent{
 						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=' ';
 						OneShotDibujarColmena.dibujarColmena(hive);
 						
-						
 						Thread.sleep(1500);
-						
 						
 						hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=OBRERA;
 						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=RECOLECTOR;
@@ -201,7 +203,7 @@ public class AbejaObrera extends Agent{
 						
 						Thread.sleep(1000);
 						Utils.enviarMensaje_todos(myAgent, "Comer", null);
-				}
+					}
 			} catch (UnreadableException e) {
 				System.err.println("No se pudo leer el mensaje correctamente");
 				e.printStackTrace();
@@ -211,4 +213,10 @@ public class AbejaObrera extends Agent{
 			}
 		}
 	}
+	
+	public ACLMessage receiveMessage()
+	{
+		ACLMessage msg = blockingReceive(MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("ontologia")));
+		return msg;
+	};
 }

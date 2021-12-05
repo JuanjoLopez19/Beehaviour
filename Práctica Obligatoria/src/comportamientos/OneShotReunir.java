@@ -12,24 +12,27 @@ public class OneShotReunir extends  OneShotBehaviour {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	ArrayList<HomeMadeStruct> aux;
-	ArrayList <ACLMessage> lista_msg;
 	
-	HomeMadeStruct[] indices = Utils.indices();
-	HomeMadeStruct posIni;
-	HomeMadeStruct aux2=new HomeMadeStruct();
+	private int NUM = 15;
+	private int NUM_DEF=8;
+	private int i = 0, j=0;
+	private char OBRERA='O';
+	private char RECOLECTOR='C';
 	
-	ACLMessage msg;
+	private ArrayList<HomeMadeStruct> aux;
+	private ArrayList <ACLMessage> lista_msg;
 	
-	int NUM = 15;
-	int NUM_DEF=8;
-	int i = 0, j=0;
-	char[][] hive;
-	char OBRERA='O';
-	char RECOLECTOR='C';
+	private HomeMadeStruct[] indices = Utils.indices();
+	private HomeMadeStruct posIni;
+	private HomeMadeStruct aux2=new HomeMadeStruct();
+	
+	private ACLMessage msg;
+	private char[][] hive;
 	
 	
-	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena, ArrayList <ACLMessage> msgs) {
+	
+	public OneShotReunir(HomeMadeStruct posIni, char [][] colmena, ArrayList <ACLMessage> msgs) 
+	{
 		super();
 		this.posIni=posIni;
 		hive = colmena;
@@ -38,6 +41,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 
 	public void action()
 	{
+		try {
 		Utils.enviarMensaje_todos(myAgent, "Reunir obrera", new HomeMadeStruct(-1,-1));
 		while(lista_msg.size()<NUM)
 		{
@@ -53,12 +57,7 @@ public class OneShotReunir extends  OneShotBehaviour {
 		}	
 		
 		System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS DISPERSADAS VENID");
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Thread.sleep(2000);
 		OneShotDibujarColmena.dibujarColmena(hive);	
 
 		for(int x = 0; x<lista_msg.size(); x++, i++)
@@ -66,16 +65,14 @@ public class OneShotReunir extends  OneShotBehaviour {
 			if(x<NUM_DEF)
 			{
 				System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS COLOCANDOSE A MI ALREDEDOR");
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Thread.sleep(2000);
+				
 				aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
 				aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
+				
 				hive[aux2.getIndex_x()][aux2.getIndex_y()]=OBRERA;
 				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
+				
 				Utils.enviarMensaje_unico(myAgent, aux2, lista_msg.get(x));
 				OneShotDibujarColmena.dibujarColmena(hive);	
 			}
@@ -85,7 +82,13 @@ public class OneShotReunir extends  OneShotBehaviour {
 				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=RECOLECTOR;
 			}
 		}
+		
 		OneShotDibujarColmena.dibujarColmena(hive);	
+		
+		} catch (InterruptedException e) {
+			System.err.println("Se ha interrumpido el sleep");
+			e.printStackTrace();
+		}
 	}
 	
 	private  ArrayList<HomeMadeStruct> colocarPosObreraIni() {
@@ -93,7 +96,8 @@ public class OneShotReunir extends  OneShotBehaviour {
 		int x, y;
 		for(int i = 0; i<NUM;i++)
 		{
-			do{
+			do
+			{
 			    x = (int) Math.floor(Math.random() * 23 + 1);
 			    y = (int) Math.floor(Math.random() * 23 + 1);
 			}while(hive[x][y]!=' ');

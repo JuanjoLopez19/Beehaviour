@@ -6,7 +6,6 @@ import auxiliar.Auxiliar;
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -16,18 +15,22 @@ public class CyclicComida extends CyclicBehaviour {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	private int NUM_DEF=8;
+	private int rand_num, salida;
+	
 	private ArrayList <ACLMessage> lista_defensoras;
 	private ArrayList <ACLMessage> lista_recolectoras;
 	private ArrayList <ACLMessage> msg_list;
+	
 	private ACLMessage msg;
-	private HomeMadeStruct pos_Reina, pos_aux;
-	private Boolean flag = true;
-	private int NUM = 15;
-	private int NUM_DEF=8;
-	private int rand_num, salida;
-	private char[][] hive;
+	private HomeMadeStruct pos_Reina;
 	private Auxiliar aux;
-	private static final long serialVersionUID = 1L;
+	
+	private Boolean flag = true;
+	private char[][] hive;
+	
 	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina, char [][] colmena)
 	{
 		super();
@@ -47,36 +50,39 @@ public class CyclicComida extends CyclicBehaviour {
 			flag=false;
 		}
 		try {
-			salida = (int) Math.floor(Math.random() * 100 +1);
-			if(salida >=90 && salida<=95)
-			{
-				Utils.enviarMensaje_todos(myAgent, "Finalizar Obrera", "Se acabo");
-				myAgent.doDelete();
-			}
-			else
-			{
-				System.out.println("\t\t"+ myAgent.getLocalName()+": tengo hambre voy a mandar a alguna defensora que me consiga comida");
-				aux = new Auxiliar(hive, lista_recolectoras);
-				rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
-				System.out.println("\t\t"+ myAgent.getLocalName()+": le he enviado el mensaje a " + lista_defensoras.get(rand_num).getSender().getLocalName());
-				Utils.enviarMensaje_unico(myAgent, aux, lista_defensoras.get(rand_num));
-				msg = receiveMessage();
-				while(msg.getContentObject() != null)
+				salida = (int) Math.floor(Math.random() * 100 +1);
+				if(salida >=90 && salida<=95)
 				{
-					msg = receiveMessage();
+					Utils.enviarMensaje_todos(myAgent, "Finalizar Obrera", "Se acabo");
+					myAgent.doDelete();
 				}
-				System.out.println("\t\t"+ myAgent.getLocalName()+": la recolectora " + msg.getSender().getLocalName() + " me ha venido a alimentar");
-				
-				msg = receiveMessage();
-				while(msg.getContentObject() != null)
+				else
 				{
+					System.out.println("\t\t"+ myAgent.getLocalName()+": tengo hambre voy a mandar a alguna defensora que me consiga comida");
+					
+					aux = new Auxiliar(hive, lista_recolectoras);
+					rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
+					System.out.println("\t\t"+ myAgent.getLocalName()+": le he enviado el mensaje a " + lista_defensoras.get(rand_num).getSender().getLocalName());
+					
+					Utils.enviarMensaje_unico(myAgent, aux, lista_defensoras.get(rand_num));
 					msg = receiveMessage();
+					
+					while(msg.getContentObject() != null)
+					{
+						msg = receiveMessage();
+					}
+					System.out.println("\t\t"+ myAgent.getLocalName()+": la recolectora " + msg.getSender().getLocalName() + " me ha venido a alimentar");
+					
+					msg = receiveMessage();
+					while(msg.getContentObject() != null)
+					{
+						msg = receiveMessage();
+					}
+					
+					System.out.println("\t\t"+ myAgent.getLocalName()+": la defensora " + msg.getSender().getLocalName() + " ya ha vuelto a su posición, puedo descansar tranquila");
+					
+					Thread.sleep(10000);
 				}
-				
-				System.out.println("\t\t"+ myAgent.getLocalName()+": la defensora " + msg.getSender().getLocalName() + " ya ha vuelto a su posición, puedo descansar tranquila");
-				
-				Thread.sleep(10000);
-			}
 		} catch (InterruptedException e) {
 			System.err.println("Se interrumpio el sleep");
 			e.printStackTrace();

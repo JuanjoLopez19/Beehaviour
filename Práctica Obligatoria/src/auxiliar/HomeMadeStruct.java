@@ -16,17 +16,26 @@ public class HomeMadeStruct implements Serializable{
 		index_x=i;
 		index_y=j;
 	}
+	
 	public HomeMadeStruct() {}
-	public int getIndex_x() {
+	
+	public int getIndex_x() 
+	{
 		return index_x;
 	}
-	public void setIndex_x(int index_x) {
+	
+	public void setIndex_x(int index_x) 
+	{
 		this.index_x = index_x;
 	}
-	public int getIndex_y() {
+	
+	public int getIndex_y() 
+	{
 		return index_y;
 	}
-	public void setIndex_y(int index_y) {
+	
+	public void setIndex_y(int index_y) 
+	{
 		this.index_y = index_y;
 	}
 	

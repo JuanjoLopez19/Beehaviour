@@ -7,7 +7,6 @@ import comportamientos.OneShotDibujarColmena;
 import comportamientos.OneShotReunir;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -18,45 +17,24 @@ import jade.wrapper.StaleProxyException;
 public class AbejaReina extends Agent {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private char REINA = 'R';
+	private int xInicial, yInicial;
 	private int DIM_MAX = 25;
-	protected CyclicBehaviour cyclicBehaviour;
-	private char[][] colmena = new char[DIM_MAX][DIM_MAX];
-    char reina = 'R';
-	int xInicial, yInicial;
-	private ArrayList <HomeMadeStruct> indices = new ArrayList<HomeMadeStruct>();
-	private ArrayList <ACLMessage> lista_msg= new ArrayList<>();
+	
 	private HomeMadeStruct posIni;
 	
-	public int getxInicial() {
-		return xInicial;
-	}
+	private char[][] colmena = new char[DIM_MAX][DIM_MAX];
 
-	public void setxInicial(int xInicial) {
-		this.xInicial = xInicial;
-	}
+	private ArrayList <HomeMadeStruct> indices = new ArrayList<HomeMadeStruct>();
+	private ArrayList <ACLMessage> lista_msg= new ArrayList<>();
 
-	public int getyInicial() {
-		return yInicial;
-	}
-
-	public void setyInicial(int yInicial) {
-		this.yInicial = yInicial;
-	}
-
-	public char[][] getColmena() {
-		return colmena;
-	}
-
-	public void setColmena(char[][] colmena) {
-		this.colmena = colmena;
-	}
-	
 	public void setup()
 	{
 		
-		for (int i = 0; i< colmena.length;i++)
+		for (int i = 0; i < colmena.length;i++)
 		{
-			for (int j = 0; j<colmena[0].length; j++)
+			for (int j = 0; j < colmena[0].length; j++)
 			{
 				colmena[i][j] = ' ';
 			}
@@ -68,7 +46,7 @@ public class AbejaReina extends Agent {
 		
 		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
 		
-		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = reina;
+		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = REINA;
 		calcIndices(indices,posIni);
 		
 		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
