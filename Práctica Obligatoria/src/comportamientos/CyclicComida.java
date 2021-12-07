@@ -52,7 +52,9 @@ public class CyclicComida extends CyclicBehaviour {
 		try {
 				salida = (int) Math.floor(Math.random() * 100 +1);
 				if(salida >=90 && salida<=91)
-				{
+				{					
+					Thread.sleep(2000);
+					
 					Utils.enviarMensaje_todos(myAgent, "Finalizar Obrera", "Se acabo");
 					myAgent.doDelete();
 				}

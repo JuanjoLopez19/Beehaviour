@@ -160,9 +160,12 @@ public class AbejaObrera extends Agent{
 					{
 						pos_aux = (HomeMadeStruct) msg.getContentObject();
 						System.out.println(myAgent.getLocalName() + ": la obrera " + msg.getSender().getLocalName() + " me ha mandado su posición para alimentar a la reina" + HomeMadeStruct.print(pos_aux));
+						
+						Thread.sleep(1000);
+						
 						Utils.enviarMensaje_todos(myAgent, "Comer", null);
 						
-						Thread.sleep(500);
+						Thread.sleep(1000);
 						
 						Utils.enviarMensaje_unico(myAgent, pos, msg);
 					}
