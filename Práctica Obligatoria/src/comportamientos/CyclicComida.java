@@ -17,7 +17,7 @@ public class CyclicComida extends CyclicBehaviour {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int NUM_DEF=8;
+	private int NUM_DEF=6;
 	private int rand_num, salida;
 	
 	private ArrayList <ACLMessage> lista_defensoras;
@@ -51,7 +51,7 @@ public class CyclicComida extends CyclicBehaviour {
 		}
 		try {
 				salida = (int) Math.floor(Math.random() * 100 +1);
-				if(salida >=90 && salida<=91)
+				if(salida >=20 && salida<=91)
 				{					
 					Thread.sleep(2000);
 					

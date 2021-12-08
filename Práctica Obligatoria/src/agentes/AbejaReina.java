@@ -1,7 +1,10 @@
 package agentes;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import auxiliar.HomeMadeStruct;
+import auxiliar.Utils;
 import comportamientos.CyclicComida;
 import comportamientos.OneShotDibujarColmena;
 import comportamientos.OneShotReunir;
@@ -19,15 +22,15 @@ public class AbejaReina extends Agent {
 	private static final long serialVersionUID = 1L;
 	
 	private char REINA = 'R';
-	private int xInicial, yInicial;
-	private int DIM_MAX = 25;
-	
+	private int DIM_MAX = 20;
+	int x,y;
 	private HomeMadeStruct posIni;
 	
 	private char[][] colmena = new char[DIM_MAX][DIM_MAX];
 
 	private ArrayList <HomeMadeStruct> indices = new ArrayList<HomeMadeStruct>();
 	private ArrayList <ACLMessage> lista_msg= new ArrayList<>();
+	private ArrayList <ACLMessage> interfaz_msg= new ArrayList<>();
 
 	public void setup()
 	{
@@ -39,10 +42,17 @@ public class AbejaReina extends Agent {
 				colmena[i][j] = ' ';
 			}
 		}
+				
+		Random random = new Random();
 		
-		xInicial = (int) Math.floor(Math.random() * (DIM_MAX-2) + 1);
-		yInicial = (int) Math.floor(Math.random() * (DIM_MAX-2) + 1);
-		posIni = new HomeMadeStruct(xInicial,yInicial);
+		do {
+            x = random.nextInt(13) + 2;
+            y = random.nextInt(14) + 1;
+        } while(y==1 && x%2==0);
+		
+		posIni = new HomeMadeStruct(x,y,"R");
+		
+		colmena[x][y] = 'R';
 		
 		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
 		
@@ -50,7 +60,7 @@ public class AbejaReina extends Agent {
 		calcIndices(indices,posIni);
 		
 		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
-		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg);
+		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg, interfaz_msg);
 		CyclicComida cc = new CyclicComida(lista_msg, posIni, colmena);
 		
 		setServices();
@@ -78,29 +88,46 @@ public class AbejaReina extends Agent {
 		int i = m.getIndex_x();
 		int j = m.getIndex_y();
 		
-		HomeMadeStruct aux =  new HomeMadeStruct(i-1,j-1);
-		l.add(aux);
+		if(i%2==0) {
+			HomeMadeStruct aux =  new HomeMadeStruct(i-1,j-1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i-1,j);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i,j-1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i,j+1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i+1,j-1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i+1,j);
+			l.add(aux);
+		} else {
+			HomeMadeStruct aux =  new HomeMadeStruct(i-1,j);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i-1,j+1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i,j-1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i,j+1);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i+1,j);
+			l.add(aux);
+			
+			aux = new HomeMadeStruct(i+1,j+1);
+			l.add(aux);
+		}
 		
-		aux = new HomeMadeStruct(i-1,j);
-		l.add(aux);
 		
-		aux = new HomeMadeStruct(i-1,j+1);
-		l.add(aux);
-		
-		aux = new HomeMadeStruct(i,j-1);
-		l.add(aux);
-		
-		aux = new HomeMadeStruct(i,j+1);
-		l.add(aux);
-		
-		aux = new HomeMadeStruct(i+1,j-1);
-		l.add(aux);
-		
-		aux = new HomeMadeStruct(i+1,j);
-		l.add(aux);
-		
-		aux = new HomeMadeStruct(i+1,j+1);
-		l.add(aux);
+	
 	}
 	
 	private void setServices() 

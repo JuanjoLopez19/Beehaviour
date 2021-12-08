@@ -172,16 +172,25 @@ public class Utils
 	}
     
     
-    public static HomeMadeStruct[] indices() {
-    	HomeMadeStruct[] aux = new HomeMadeStruct[8];
+    public static HomeMadeStruct[] indices_par() {
+    	HomeMadeStruct[] aux = new HomeMadeStruct[6];
 		aux[0]= new HomeMadeStruct(-1,-1);
 		aux[1]= new HomeMadeStruct(-1,0);
-		aux[2]= new HomeMadeStruct(-1,1);
-		aux[3]= new HomeMadeStruct(0,-1);
-		aux[4]= new HomeMadeStruct(0,1);
-		aux[5]= new HomeMadeStruct(1,-1);
-		aux[6]= new HomeMadeStruct(1,0);
-		aux[7]= new HomeMadeStruct(1,1);
+		aux[2]= new HomeMadeStruct(0,-1);
+		aux[3]= new HomeMadeStruct(0,1);
+		aux[4]= new HomeMadeStruct(1,-1);
+		aux[5]= new HomeMadeStruct(1,0);
+		return aux;
+    }
+    
+    public static HomeMadeStruct[] indices_impar() {
+    	HomeMadeStruct[] aux = new HomeMadeStruct[6];
+		aux[0]= new HomeMadeStruct(-1,0);
+		aux[1]= new HomeMadeStruct(-1,1);
+		aux[2]= new HomeMadeStruct(0,-1);
+		aux[3]= new HomeMadeStruct(0,1);
+		aux[4]= new HomeMadeStruct(1,0);
+		aux[5]= new HomeMadeStruct(1,1);
 		return aux;
     }
      

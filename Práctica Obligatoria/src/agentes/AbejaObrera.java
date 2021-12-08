@@ -28,6 +28,8 @@ public class AbejaObrera extends Agent{
 	
 	private ArrayList<HomeMadeStruct> pos = new ArrayList<>();
 	
+	private ArrayList<ACLMessage> interfaz_msg = new ArrayList<>();
+	
 	private char [][] hive;
 	
 	private char OBRERA='O';
@@ -105,9 +107,11 @@ public class AbejaObrera extends Agent{
 			try {
 					ACLMessage msg = receiveMessage();
 						
-					aux = (HomeMadeStruct) msg.getContentObject();
-					if(aux.getIndex_x()==-1 & aux.getIndex_y() ==-1)
-						Utils.enviarMensaje_unico(myAgent,aux, msg);
+					//aux = (HomeMadeStruct) msg.getContentObject();
+					if(msg.getContentObject().getClass() == msg.getClass()) {
+						interfaz_msg.add((ACLMessage)msg.getContentObject());
+						Utils.enviarMensaje_unico(myAgent,null, msg);
+					}
 					
 					msg = receiveMessage();
 					aux = (HomeMadeStruct) msg.getContentObject();
@@ -187,11 +191,14 @@ public class AbejaObrera extends Agent{
 						
 						msg = receiveMessage();
 						auxiliar = (ArrayList<HomeMadeStruct>) msg.getContentObject();
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(-pos.get(1).getIndex_x(),pos.get(1).getIndex_y()),interfaz_msg.get(0));
 						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=' ';
 						OneShotDibujarColmena.dibujarColmena(hive);
 						
-						Thread.sleep(1500);
+						//Thread.sleep(1500);
 						
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),"O"),interfaz_msg.get(0));
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),"C"),interfaz_msg.get(0));
 						hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=OBRERA;
 						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=RECOLECTOR;
 						OneShotDibujarColmena.dibujarColmena(hive);
@@ -199,6 +206,8 @@ public class AbejaObrera extends Agent{
 						
 						Thread.sleep(2500);
 						
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),"C"),interfaz_msg.get(0));
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),"O"),interfaz_msg.get(0));
 						hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=RECOLECTOR;
 						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=OBRERA;
 						OneShotDibujarColmena.dibujarColmena(hive);
