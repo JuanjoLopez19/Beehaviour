@@ -23,7 +23,10 @@ public class OneShotDibujarColmena extends OneShotBehaviour {
 	
 	public static void dibujarColmena(char[][] colmena) {
 		Utils.fakeClear();
-		System.out.println("\t_____________________________________________________________________________________________________");
+		System.out.print("\t");
+		for(int i = 0; i< colmena.length; i++)
+			System.out.print("_");
+		System.out.println();
 		System.out.print("\t");
 		for (int i = 0; i< colmena.length;i++){
 			System.out.print("|");
@@ -33,7 +36,8 @@ public class OneShotDibujarColmena extends OneShotBehaviour {
 			System.out.println("");
 			System.out.print("\t");
 		}
-		//System.out.println("___________________________________________________");
-		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		for(int i = 0; i< colmena.length; i++)
+			System.out.print("¯");
+		System.out.println();
 	}
 }

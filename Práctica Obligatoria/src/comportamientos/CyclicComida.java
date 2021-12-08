@@ -2,8 +2,6 @@ package comportamientos;
 
 import java.util.ArrayList;
 
-import auxiliar.Auxiliar;
-import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -25,18 +23,12 @@ public class CyclicComida extends CyclicBehaviour {
 	private ArrayList <ACLMessage> msg_list;
 	
 	private ACLMessage msg;
-	private HomeMadeStruct pos_Reina;
-	private Auxiliar aux;
-	
 	private Boolean flag = true;
-	private char[][] hive;
 	
-	public CyclicComida(ArrayList <ACLMessage> msg, HomeMadeStruct posReina, char [][] colmena)
+	public CyclicComida(ArrayList <ACLMessage> msg)
 	{
 		super();
 		this.msg_list=msg;
-		pos_Reina = posReina;
-		hive = colmena;
 	}
 	
 
@@ -51,7 +43,7 @@ public class CyclicComida extends CyclicBehaviour {
 		}
 		try {
 				salida = (int) Math.floor(Math.random() * 100 +1);
-				if(salida >=20 && salida<=91)
+				if(salida >=90 && salida<=95)
 				{					
 					Thread.sleep(2000);
 					
@@ -60,20 +52,19 @@ public class CyclicComida extends CyclicBehaviour {
 				}
 				else
 				{
-					System.out.println("\t\t"+ myAgent.getLocalName()+": tengo hambre voy a mandar a alguna defensora que me consiga comida");
+					System.out.println(myAgent.getLocalName()+": tengo hambre voy a mandar a alguna defensora que me consiga comida");
 					
-					aux = new Auxiliar(hive, lista_recolectoras);
 					rand_num = (int) Math.floor(Math.random() * lista_defensoras.size());
-					System.out.println("\t\t"+ myAgent.getLocalName()+": le he enviado el mensaje a " + lista_defensoras.get(rand_num).getSender().getLocalName());
+					System.out.println(myAgent.getLocalName()+": le he enviado el mensaje a " + lista_defensoras.get(rand_num).getSender().getLocalName());
 					
-					Utils.enviarMensaje_unico(myAgent, aux, lista_defensoras.get(rand_num));
+					Utils.enviarMensaje_unico(myAgent, lista_recolectoras, lista_defensoras.get(rand_num));
 					msg = receiveMessage();
 					
 					while(msg.getContentObject() != null)
 					{
 						msg = receiveMessage();
 					}
-					System.out.println("\t\t"+ myAgent.getLocalName()+": la recolectora " + msg.getSender().getLocalName() + " me ha venido a alimentar");
+					System.out.println(myAgent.getLocalName()+": la recolectora " + msg.getSender().getLocalName() + " me ha venido a alimentar");
 					
 					msg = receiveMessage();
 					while(msg.getContentObject() != null)
@@ -81,9 +72,12 @@ public class CyclicComida extends CyclicBehaviour {
 						msg = receiveMessage();
 					}
 					
-					System.out.println("\t\t"+ myAgent.getLocalName()+": la defensora " + msg.getSender().getLocalName() + " ya ha vuelto a su posición, puedo descansar tranquila");
+					System.out.println(myAgent.getLocalName()+": la defensora " + msg.getSender().getLocalName() + " ya ha vuelto a su posición, puedo descansar tranquila");
 					
 					Thread.sleep(10000);
+					
+					Utils.fakeClear();
+					Utils.fakeClear();
 				}
 		} catch (InterruptedException e) {
 			System.err.println("Se interrumpio el sleep");

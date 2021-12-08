@@ -9,17 +9,15 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-public class OneShotReunir extends  OneShotBehaviour {
-	/**
-	 * 
-	 */
+public class OneShotReunir extends  OneShotBehaviour 
+{
 	private static final long serialVersionUID = 1L;
 	
 	private int NUM = 11;
 	private int NUM_DEF=6;
 	private int i = 0, j=0;
-	private char OBRERA='O';
-	private char RECOLECTOR='C';
+	private String OBRERA="O";
+	private String RECOLECTOR="C";
 	
 	private ArrayList<HomeMadeStruct> aux;
 	private ArrayList <ACLMessage> lista_msg;
@@ -52,64 +50,54 @@ public class OneShotReunir extends  OneShotBehaviour {
 
 	public void action()
 	{
-		
-		
-		
 		try {
 			
-			Utils.enviarMensaje_todos(myAgent, "Reunir interfaz", new HomeMadeStruct(-1,-1));
+			Utils.enviarMensaje_todos(myAgent, "Reunir interfaz", null);
 			
 			msg = receiveMessage();
 			interfaz_msg.add(msg);
 			
 			Utils.enviarMensaje_unico(myAgent, posIni,interfaz_msg.get(0));
 			
-		Utils.enviarMensaje_todos(myAgent, "Reunir obrera", interfaz_msg.get(0));
-		while(lista_msg.size()<NUM)
-		{
-			msg = receiveMessage();
-			lista_msg.add(msg);
-		}
-		
-		aux = colocarPosObreraIni(posIni);
-		for(ACLMessage m : lista_msg)
-		{
-			Utils.enviarMensaje_unico(myAgent, aux.get(j), m);
-			j++;
-		}	
-		
-		System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS DISPERSADAS VENID");
-		Thread.sleep(2000);
-		OneShotDibujarColmena.dibujarColmena(hive);	
-
-		for(int x = 0; x<lista_msg.size(); x++, i++)
-		{
-			if(x<NUM_DEF)
+			Utils.enviarMensaje_todos(myAgent, "Reunir obrera", interfaz_msg.get(0));
+			while(lista_msg.size()<NUM)
 			{
-				System.out.println("\t\t"+myAgent.getLocalName()+": OBRERAS COLOCANDOSE A MI ALREDEDOR");
-				Thread.sleep(2000);
-				
-				aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
-				aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
-				
-				Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(-aux.get(i).getIndex_x(),aux.get(i).getIndex_y()),interfaz_msg.get(0));
-				Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(aux2.getIndex_x(),aux2.getIndex_y(),"O"),interfaz_msg.get(0));
-				hive[aux2.getIndex_x()][aux2.getIndex_y()]=OBRERA;
-				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=' ';
-				
-				Utils.enviarMensaje_unico(myAgent, aux2, lista_msg.get(x));
-				OneShotDibujarColmena.dibujarColmena(hive);	
+				msg = receiveMessage();
+				lista_msg.add(msg);
 			}
-			else
+			
+			aux = colocarPosObreraIni(posIni);
+			for(ACLMessage m : lista_msg)
 			{
-				Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));
-				hive[aux.get(i).getIndex_x()][aux.get(i).getIndex_y()]=RECOLECTOR;
-				Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(aux.get(x).getIndex_x(),aux.get(x).getIndex_y(),"C"),interfaz_msg.get(0));
-			}
-		}
-		
-		OneShotDibujarColmena.dibujarColmena(hive);	
-		
+				Utils.enviarMensaje_unico(myAgent, aux.get(j), m);
+				j++;
+			}	
+			
+			System.out.println(myAgent.getLocalName()+": OBRERAS DISPERSADAS VENID");
+			Thread.sleep(2000);
+	
+			System.out.println(myAgent.getLocalName()+": OBRERAS COLOCANDOSE A MI ALREDEDOR");
+			for(int x = 0; x<lista_msg.size(); x++, i++)
+			{
+				if(x<NUM_DEF)
+				{
+					Thread.sleep(2000);
+					
+					aux2.setIndex_x(posIni.getIndex_x()+indices[i].getIndex_x());
+					aux2.setIndex_y(posIni.getIndex_y()+indices[i].getIndex_y());
+					
+					Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(-aux.get(i).getIndex_x(),aux.get(i).getIndex_y()),interfaz_msg.get(0));
+					Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(aux2.getIndex_x(),aux2.getIndex_y(),"O"),interfaz_msg.get(0));
+					
+					Utils.enviarMensaje_unico(myAgent, aux2, lista_msg.get(x));
+				}
+				else
+				{
+					Utils.enviarMensaje_unico(myAgent, aux.get(x), lista_msg.get(x));
+					
+					Utils.enviarMensaje_unico(myAgent, new HomeMadeStruct(aux.get(x).getIndex_x(),aux.get(x).getIndex_y(),RECOLECTOR),interfaz_msg.get(0));
+				}
+			}		
 		} catch (InterruptedException e) {
 			System.err.println("Se ha interrumpido el sleep");
 			e.printStackTrace();
@@ -120,7 +108,6 @@ public class OneShotReunir extends  OneShotBehaviour {
 		ArrayList<HomeMadeStruct> aux = new ArrayList<>();
 		int x, y;
 		Random random = new Random();
-		HomeMadeStruct[] comprobador = new HomeMadeStruct[6];
 		boolean repetido;
 		for(int i = 0; i<NUM;i++)
 		{
@@ -146,9 +133,9 @@ public class OneShotReunir extends  OneShotBehaviour {
 	            }
 	            
 	        } while(y==1 && x%2==0 || hive[x][y]!=' ' || repetido);
-			HomeMadeStruct punto = new HomeMadeStruct(x,y,"O");
+			HomeMadeStruct punto = new HomeMadeStruct(x,y,OBRERA);
 			Utils.enviarMensaje_unico(myAgent,punto,interfaz_msg.get(0));
-			hive[x][y]=OBRERA;
+			hive[x][y]=OBRERA.charAt(0);
 			aux.add(punto);
 		}
 		return aux;

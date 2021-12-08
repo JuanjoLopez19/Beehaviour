@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import auxiliar.HomeMadeStruct;
-import auxiliar.Utils;
 import comportamientos.CyclicComida;
-import comportamientos.OneShotDibujarColmena;
 import comportamientos.OneShotReunir;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
@@ -21,9 +19,9 @@ public class AbejaReina extends Agent {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private char REINA = 'R';
+	private String REINA = "R";
 	private int DIM_MAX = 20;
-	int x,y;
+	private int x,y;
 	private HomeMadeStruct posIni;
 	
 	private char[][] colmena = new char[DIM_MAX][DIM_MAX];
@@ -50,22 +48,15 @@ public class AbejaReina extends Agent {
             y = random.nextInt(14) + 1;
         } while(y==1 && x%2==0);
 		
-		posIni = new HomeMadeStruct(x,y,"R");
+		posIni = new HomeMadeStruct(x,y,REINA);
 		
-		colmena[x][y] = 'R';
-		
-		//reina.addAttribute(TextAttribute.FOREGROUND, Color.red, 39, 40);
-		
-		colmena[posIni.getIndex_x()][posIni.getIndex_y()] = REINA;
 		calcIndices(indices,posIni);
 		
-		OneShotDibujarColmena osd = new OneShotDibujarColmena(colmena);
 		OneShotReunir osr = new OneShotReunir(posIni, colmena, lista_msg, interfaz_msg);
-		CyclicComida cc = new CyclicComida(lista_msg, posIni, colmena);
+		CyclicComida cc = new CyclicComida(lista_msg);
 		
 		setServices();
 		
-		addBehaviour(osd);
 		addBehaviour(osr);
 		addBehaviour(cc);	
 	}

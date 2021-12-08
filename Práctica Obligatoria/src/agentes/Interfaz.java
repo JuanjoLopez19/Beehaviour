@@ -1,11 +1,9 @@
 package agentes;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
-import comportamientos.OneShotReunir;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -23,7 +21,6 @@ import jade.wrapper.StaleProxyException;
 import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.IOException;
@@ -31,13 +28,10 @@ import java.io.InputStream;
 
 import static java.lang.Thread.sleep;
 import java.util.function.*;
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class Interfaz extends Agent
 {
@@ -46,13 +40,11 @@ public class Interfaz extends Agent
 
     private static final double H = Math.sqrt(3) / 2;
     
-    private ArrayList<HomeMadeStruct> pos;
     HomeMadeStruct punto;
     HomeMadeStruct auxilar = new HomeMadeStruct();
     
     final int width = 20;
     final int height = 20;
-    //Image img_corona = new ImageIcon("reina.png").getImage();
     Image img_corona;
     Image img_defensora;
     Image img_recolectora;
@@ -129,12 +121,6 @@ public class Interfaz extends Agent
                             } else if (contenido[i][j].equals("C")){
                                 g.drawImage(img_recolectora, (int)(u.getCenterX()-15 ), (int)(u.getCenterY() -15 ), this);
                             }
-                           /*g.setFont(new Font("Arial",Font.BOLD,14));
-                            g.drawString(
-                                    contenido[i][j], 
-                                    (int)(u.getCenterX() - 4), 
-                                    (int)(u.getCenterY() +5)
-                                );*/
                         }
                     }
                 } 
@@ -254,8 +240,7 @@ public class Interfaz extends Agent
 			try {
 					ACLMessage msg = receiveMessage();
 						
-					aux = (HomeMadeStruct) msg.getContentObject();
-					if(aux.getIndex_x()==-1 & aux.getIndex_y() ==-1)
+					if(msg.getContentObject() == null)
 						Utils.enviarMensaje_unico(myAgent,aux, msg);
 					
 				} catch (UnreadableException e) {
@@ -267,7 +252,8 @@ public class Interfaz extends Agent
     
     public class CyclicDibujar extends CyclicBehaviour{
 
-    	private ACLMessage msg;
+		private static final long serialVersionUID = 1L;
+		private ACLMessage msg;
     	private String aux = "comprobador";
 		@Override
 		public void action() {

@@ -2,10 +2,8 @@ package agentes;
 
 import java.util.ArrayList;
 
-import auxiliar.Auxiliar;
 import auxiliar.HomeMadeStruct;
 import auxiliar.Utils;
-import comportamientos.OneShotDibujarColmena;
 import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -30,10 +28,8 @@ public class AbejaObrera extends Agent{
 	
 	private ArrayList<ACLMessage> interfaz_msg = new ArrayList<>();
 	
-	private char [][] hive;
-	
-	private char OBRERA='O';
-	private char RECOLECTOR='C';
+	private String OBRERA = "O";
+	private String RECOLECTOR = "C";
 	
 	public void setup(){
 				
@@ -42,7 +38,6 @@ public class AbejaObrera extends Agent{
 		setServices();
 		addBehaviour(osp);
 		addBehaviour(cco);
-		
 	}	
 	
 	protected void takeDown() {
@@ -80,8 +75,8 @@ public class AbejaObrera extends Agent{
 	        sd.addLanguages(new SLCodec().getName());
 	        dfd.addServices(sd);
 	        
-	            //Try catch to register the services
-	            DFService.register(this, dfd);
+            //Try catch to register the services
+            DFService.register(this, dfd);
         }
         catch(FIPAException e)
         {
@@ -91,9 +86,6 @@ public class AbejaObrera extends Agent{
 	
 	public class OneShotPosicion extends OneShotBehaviour
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		
 		private HomeMadeStruct aux;
@@ -106,8 +98,7 @@ public class AbejaObrera extends Agent{
 		public void action() {
 			try {
 					ACLMessage msg = receiveMessage();
-						
-					//aux = (HomeMadeStruct) msg.getContentObject();
+					
 					if(msg.getContentObject().getClass() == msg.getClass()) {
 						interfaz_msg.add((ACLMessage)msg.getContentObject());
 						Utils.enviarMensaje_unico(myAgent,null, msg);
@@ -128,14 +119,11 @@ public class AbejaObrera extends Agent{
 		}
 	}
 	
-	public class CyclicComerObrera extends CyclicBehaviour{
-		/**
-		 * 
-		 */
+	public class CyclicComerObrera extends CyclicBehaviour
+	{
 		private static final long serialVersionUID = 1L;
 		
 		private ACLMessage msg;
-		private Auxiliar aux;
 		private HomeMadeStruct pos_aux = new HomeMadeStruct();
 		
 		private ArrayList<HomeMadeStruct> pos, auxiliar;
@@ -179,39 +167,30 @@ public class AbejaObrera extends Agent{
 					}
 					else
 					{
-						aux = (Auxiliar) msg.getContentObject();
-						hive = aux.getColmena();
-						RecolectorList = aux.getLista_recolectoras();
+						RecolectorList = (ArrayList<ACLMessage>) msg.getContentObject();
 						
-						OneShotDibujarColmena.dibujarColmena(hive);
-						System.out.println("\t\t" + myAgent.getLocalName() + ": la reina me ha mandado avisar a una recolectora para que la alimente");
+						System.out.println(myAgent.getLocalName() + ": la reina me ha mandado avisar a una recolectora para que la alimente");
 						rand_num = (int) Math.floor(Math.random() * RecolectorList.size());
-						System.out.println("\t\t" + myAgent.getLocalName() + ": le envió el mensaje de intercambio a " + RecolectorList.get(rand_num).getSender().getLocalName());
+						System.out.println(myAgent.getLocalName() + ": le envió el mensaje de intercambio a " + RecolectorList.get(rand_num).getSender().getLocalName());
 						Utils.enviarMensaje_unico(myAgent, pos.get(1), RecolectorList.get(rand_num) );
 						
 						msg = receiveMessage();
 						auxiliar = (ArrayList<HomeMadeStruct>) msg.getContentObject();
+						
 						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(-pos.get(1).getIndex_x(),pos.get(1).getIndex_y()),interfaz_msg.get(0));
-						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=' ';
-						OneShotDibujarColmena.dibujarColmena(hive);
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),OBRERA),interfaz_msg.get(0));
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),RECOLECTOR),interfaz_msg.get(0));
 						
-						//Thread.sleep(1500);
 						
-						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),"O"),interfaz_msg.get(0));
-						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),"C"),interfaz_msg.get(0));
-						hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=OBRERA;
-						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=RECOLECTOR;
-						OneShotDibujarColmena.dibujarColmena(hive);
-						System.out.printf("\t\t"+ myAgent.getLocalName()+": Ya ha comido la reina me vuelvo a mi posicion\n");
+						System.out.printf(myAgent.getLocalName()+": Ya ha comido la reina me vuelvo a mi posicion\n");
 						
 						Thread.sleep(2500);
 						
-						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),"C"),interfaz_msg.get(0));
-						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),"O"),interfaz_msg.get(0));
-						hive[auxiliar.get(1).getIndex_x()][auxiliar.get(1).getIndex_y()]=RECOLECTOR;
-						hive[pos.get(1).getIndex_x()][pos.get(1).getIndex_y()]=OBRERA;
-						OneShotDibujarColmena.dibujarColmena(hive);
-						System.out.printf("\t\t"+ myAgent.getLocalName()+": he vuelto a mi posición\n");
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(auxiliar.get(1).getIndex_x(),auxiliar.get(1).getIndex_y(),RECOLECTOR),interfaz_msg.get(0));
+						Utils.enviarMensaje_unico(myAgent,new HomeMadeStruct(pos.get(1).getIndex_x(),pos.get(1).getIndex_y(),OBRERA),interfaz_msg.get(0));
+						
+						
+						System.out.printf(myAgent.getLocalName()+": he vuelto a mi posición\n");
 						
 						Thread.sleep(1000);
 						Utils.enviarMensaje_todos(myAgent, "Comer", null);
