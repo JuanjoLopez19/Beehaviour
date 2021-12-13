@@ -9,4 +9,15 @@
   Presentación de la lógica a través de una interfaz gráfica desarollada en swing;
 - Sin Interfaz gráfica:
   Presentación de la lógica a través de la consola de comandos del ide o de la terminal que se utilice 
+  
+  
+  
+  
+  # Realizado por:
+  <table>
+   <td align="center"><a href="https://github.com/JuanjoLopez19"><img src="https://avatars.githubusercontent.com/u/92031193?v=4" width="100px;" alt=""/><br /><sub><b>Juanjo López</b></sub></a><br /> 
+   <td align="center"><a href="https://github.com/pablosbl"><img src="https://avatars.githubusercontent.com/u/84237179?v=4" width="100px;" alt=""/><br /><sub><b>Pablo Santos</b></sub></a><br /> 
+      <td align="center"><a href="https://github.com/robertomergon"><img src="https://avatars.githubusercontent.com/u/92520941?v=4" width="100px;" alt=""/><br /><sub><b>Roberto Merchán</b></sub></a><br /> 
+         <td align="center"><a href="https://github.com/sergiosg1504"><img src="https://avatars.githubusercontent.com/u/92520473?v=4" width="100px;" alt=""/><br /><sub><b>Sergio Sánchez</b></sub></a><br /> 
+           </table>
 
