@@ -9,6 +9,9 @@
   Presentación de la lógica a través de una interfaz gráfica desarollada en swing;
 - Sin Interfaz gráfica:
   Presentación de la lógica a través de la consola de comandos del ide o de la terminal que se utilice 
+  #### IDEs recomendados:
+   Eclipse: <img src = "https://github.com/JuanjoLopez19/imagenes/blob/main/Eclipse.png" width="70px" alt="Eclipse"/> 
+   NeatBeans: <img src = "https://github.com/JuanjoLopez19/imagenes/blob/main/neatbeans.png" width="70px" margin="100px" alt="Neatbeans"/>
   
   
   
